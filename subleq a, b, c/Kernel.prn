@@ -1,0 +1,278 @@
+    1  $00000000:00000000
+    2  $00000000:00000000  $0000000                                DC   MemBottom $0000000
+    3  $00000000:0FFFFFFF  $FFFFFFF                                DC   MemTop    $FFFFFFF
+    4  $00000000:00000005  $00000005                               DC   ProcAdd      5
+    5  $00000000:00000000
+    6  $00000000:00000000                                          ORG 0
+    7  $00000000:00000000  $0000000C  $0000000C  $0FFFF000         subleq  TEMP TEMP COLD             // Cold Boot
+    8  $00000000:00000003
+    9  $00000000:00000003                                    EXCPRC:
+   10  $00000000:00000003  $0000000C  $0000000C  $00000000         subleq  TEMP TEMP MemBottom        // Gancho para simular um return
+   11  $00000000:00000006
+   12  $00000000:00000006                                    PRNCHR: // Imprimir um caracter. A posicao TEMP sera substituida pelo endereco do caracter
+   13  $00000000:00000006  $0000000C  $FFFFFFE2  $00000009         subleq  TEMP  Port_2
+   14  $00000000:00000009  $0000000C  $0000000C                    DD  TEMP TEMP
+   15  $00000000:0000000B                                    PRNCHRF:
+   16  $00000000:0000000B  $00000000                               DD  0                              // Aqui vai a chamada de retorno (subleq  TEMP  TEMP <ret>
+   17  $00000000:0000000C
+   18  $00000000:0000000C
+   19  $00000000:0000000C  $00000000                         TEMP: DA    0                            // Espaco reservado para dados temporarios
+   20  $00000000:0000000D
+   21  $00000000:00000010  $00000010                               ORG 16
+   22  $00000000:00000010
+   23  $00000000:00000010  $00000000                         rgAdd_Hard_IRQ_0:   DA   0               // Endereco de manipulacao da Hard IRQ 0
+   24  $00000000:00000011  $00000000                         rgAdd_Hard_IRQ_1:   DA   0               // Endereco de manipulacao da Hard IRQ 1
+   25  $00000000:00000012  $00000000                         rgAdd_Hard_IRQ_2:   DA   0               // Endereco de manipulacao da Hard IRQ 2
+   26  $00000000:00000013  $00000000                         rgAdd_Hard_IRQ_3:   DA   0               // Endereco de manipulacao da Hard IRQ 3
+   27  $00000000:00000014  $00000000                         rgAdd_Hard_IRQ_4:   DA   0               // Endereco de manipulacao da Hard IRQ 4
+   28  $00000000:00000015  $00000000                         rgAdd_Hard_IRQ_5:   DA   0               // Endereco de manipulacao da Hard IRQ 5
+   29  $00000000:00000016  $00000000                         rgAdd_Hard_IRQ_6:   DA   0               // Endereco de manipulacao da Hard IRQ 6
+   30  $00000000:00000017  $00000000                         rgAdd_Hard_IRQ_7:   DA   0               // Endereco de manipulacao da Hard IRQ 7
+   31  $00000000:00000018
+   32  $00000000:00000018  $00000000                         rgRet_Hard_IRQ_0:   DA   0               // Retorno da Hard IRQ 0
+   33  $00000000:00000019  $00000000                         rgRet_Hard_IRQ_1:   DA   0               // Retorno da Hard IRQ 1
+   34  $00000000:0000001A  $00000000                         rgRet_Hard_IRQ_2:   DA   0               // Retorno da Hard IRQ 2
+   35  $00000000:0000001B  $00000000                         rgRet_Hard_IRQ_3:   DA   0               // Retorno da Hard IRQ 3
+   36  $00000000:0000001C  $00000000                         rgRet_Hard_IRQ_4:   DA   0               // Retorno da Hard IRQ 4
+   37  $00000000:0000001D  $00000000                         rgRet_Hard_IRQ_5:   DA   0               // Retorno da Hard IRQ 5
+   38  $00000000:0000001E  $00000000                         rgRet_Hard_IRQ_6:   DA   0               // Retorno da Hard IRQ 6
+   39  $00000000:0000001F  $00000000                         rgRet_Hard_IRQ_7:   DA   0               // Retorno da Hard IRQ 7
+   40  $00000000:00000020
+   41  $00000000:00000020  $00000000                         rgAdd_Soft_IRQ_0:   DA   0               // Endereco de manipulacao da Soft IRQ 0
+   42  $00000000:00000021  $00000000                         rgAdd_Soft_IRQ_1:   DA   0               // Endereco de manipulacao da Soft IRQ 1
+   43  $00000000:00000022  $00000000                         rgAdd_Soft_IRQ_2:   DA   0               // Endereco de manipulacao da Soft IRQ 2
+   44  $00000000:00000023  $00000000                         rgAdd_Soft_IRQ_3:   DA   0               // Endereco de manipulacao da Soft IRQ 3
+   45  $00000000:00000024  $00000000                         rgAdd_Soft_IRQ_4:   DA   0               // Endereco de manipulacao da Soft IRQ 4
+   46  $00000000:00000025  $00000000                         rgAdd_Soft_IRQ_5:   DA   0               // Endereco de manipulacao da Soft IRQ 5
+   47  $00000000:00000026  $00000000                         rgAdd_Soft_IRQ_6:   DA   0               // Endereco de manipulacao da Soft IRQ 6
+   48  $00000000:00000027  $00000000                         rgAdd_Soft_IRQ_7:   DA   0               // Endereco de manipulacao da Soft IRQ 7
+   49  $00000000:00000028
+   50  $00000000:00000028  $00000000                         rgRet_Soft_IRQ_0:   DA   0               // Retorno da Soft IRQ 0
+   51  $00000000:00000029  $00000000                         rgRet_Soft_IRQ_1:   DA   0               // Retorno da Soft IRQ 1
+   52  $00000000:0000002A  $00000000                         rgRet_Soft_IRQ_2:   DA   0               // Retorno da Soft IRQ 2
+   53  $00000000:0000002B  $00000000                         rgRet_Soft_IRQ_3:   DA   0               // Retorno da Soft IRQ 3
+   54  $00000000:0000002C  $00000000                         rgRet_Soft_IRQ_4:   DA   0               // Retorno da Soft IRQ 4
+   55  $00000000:0000002D  $00000000                         rgRet_Soft_IRQ_5:   DA   0               // Retorno da Soft IRQ 5
+   56  $00000000:0000002E  $00000000                         rgRet_Soft_IRQ_6:   DA   0               // Retorno da Soft IRQ 6
+   57  $00000000:0000002F  $00000000                         rgRet_Soft_IRQ_7:   DA   0               // Retorno da Soft IRQ 7
+   58  $00000000:00000030
+   59  $00000000:00000030
+   60  $00000000:00000030                                          // area de inicio de programa
+   61  $00000000:000000FE  $000000FE                               ORG 254
+   62  $000000FE:00000000  $00000166                               @REL PNT_
+   63  $000000FE:00000000
+   64  $000000FE:00000000  $00000102                         CSINI_:   Da   PROGR_
+   65  $000000FE:00000001  $0000015B                         CSEND_:   DA   END_
+   66  $000000FE:00000002  $0000015B                         DSINI_:   dA   PARS_
+   67  $000000FE:00000003  $0000015B                         DSEND_:   da   END_
+   68  $000000FE:00000004
+   69  $000000FE:00000004                                    // CODE SEGMENT
+   70  $000000FE:00000004  $00000068  $00000068  $00000105   PROGR_:  subleq  PNT_                    // if {PNT_ = PNT_ - PNT_) <= 0 goto next    // Limpa PNT_
+   71  $000000FE:00000007  $00000065  $00000065  $00000108            subleq  CHR_                    // if {CHR_ = CHR_ - CHR_) <= 0 goto next    // Limpa CHR_
+   72  $000000FE:0000000A  $0000004A  $00000065  $0000010B            subleq  INI_  CHR_              // if {INI_ = CHR_ - CHR_) <= 0 goto next    // CHR_ = -[INI_] = -INITXT_
+   73  $000000FE:0000000D  $00000065  $00000068  $0000010E            subleq  CHR_  PNT_              // if {PNT_ = PNT_ - CHR_) <= 0 goto next    // PNT_ = -[CHR_] = INITXT_
+   74  $000000FE:00000010  $00000065  $00000065  $00000111            subleq  CHR_                    // if {CHR_ = CHR_ - CHR_) <= 0 goto next    // Limpa CHR_
+   75  $000000FE:00000013
+   76  $000000FE:00000013  $00000066  $00000066  $00000114   LOOP_:   subleq  TMP_                    // if {TMP_ = TMP_ - TMP_) <= 0 goto next    // Limpa TMP_
+   77  $000000FE:00000016  $00000065  $00000065  $00000117            subleq  CHR_                    // if {CHR_ = CHR_ - CHR_) <= 0 goto next    // Limpa CHR_
+   78  $000000FE:00000019  $00000067  $00000067  $0000011A            subleq  BUF_                    // if {BUF_ = BUF_ - BUF_) <= 0 goto next    // Limpa BUF_
+   79  $000000FE:0000001C
+   80  $000000FE:0000001C  $00000068  $00000067  $0000011D            subleq  PNT_  BUF_              // if {BUF_ = BUF_ - PNT_) <= 0 goto next        // BUF_ = -PNT_
+   81  $000000FE:0000001F  $00000006  $00000006  $00000120            subleq  PRNCHR                  // if {PRNCHR = PRNCHR - PRNCHR) <= 0 goto next  // Limpa PRNCHR
+   82  $000000FE:00000022  $00000067  $00000006  $00000123            subleq  BUF_  PRNCHR            // if {PRNCHR = PRNCHR - BUF_) <= 0 goto next    // PRNCHR = -BUF_ = PNT_
+   83  $000000FE:00000025
+   84  $000000FE:00000025  $0000000B  $0000000B  $00000126            subleq  PRNCHRF                 // if {PRNCHRF = PRNCHRF - PRNCHRF) <= 0 goto next  // Limpa PRNCHRF
+   85  $000000FE:00000028  $00000066  $00000066  $00000129            subleq  TMP_                    // if {TMP_ = TMP_ - TMP_) <= 0 goto next           // Limpa TMP_
+   86  $000000FE:0000002B  $0000004C  $00000066  $0000012C            subleq  LOOP1_  TMP_            // if {TMP_ = TMP_ - LOOP1_) <= 0 goto next         // TMP_ = -LOOP1_
+   87  $000000FE:0000002E  $00000066  $0000000B  $0000012F            subleq  TMP_  PRNCHRF           // if {PRNCHRF = PRNCHRF - TMP_) <= 0 goto next     // PRNCHRF = -TMP_ = LOOP1_
+   88  $000000FE:00000031
+   89  $000000FE:00000031  $00000066  $00000066  $00000006            subleq  TMP_  TMP_  PRNCHR      // if {TMP_ = TMP_ - TMP_) <= 0 goto next    // Vai para PRNCHR
+   90  $000000FE:00000034
+   91  $000000FE:00000034  $00000049  $00000068  $00000135   RETPRT_: subleq  NEG_  PNT_              // if {PNT_ = PNT_ - NEG_) <= 0 goto next    // Incrementa PNT_
+   92  $000000FE:00000037  $00000066  $00000066  $00000138            subleq  TMP_                    // if {TMP_ = TMP_ - TMP_) <= 0 goto next    // Limpa TMP_
+   93  $000000FE:0000003A  $00000067  $00000067  $0000013B            subleq  BUF_                    // if {BUF_ = BUF_ - BUF_) <= 0 goto next    // Limpa BUF_
+   94  $000000FE:0000003D  $0000004B  $00000066  $0000013E            subleq  FIM_  TMP_              // if {TMP_ = TMP_ - FIM_) <= 0 goto next    // TMP_ = -FIM_
+   95  $000000FE:00000040  $00000066  $00000067  $00000141            subleq  TMP_  BUF_              // if {BUF_ = BUF_ - TMP_) <= 0 goto next    // TMP_ = -TMP_ = FIM_
+   96  $000000FE:00000043  $00000068  $00000067  $0FFFF05A            subleq  PNT_  BUF_  HALT        // if {BUF_ = BUF_ - PNT_) <= 0 HALT         // BUF_ = BUF_ - PNT_
+   97  $000000FE:00000046  $00000065  $00000065  $00000013            subleq  CHR_  CHR_  LOOP_       // if {CHR_ = CHR_ - CHR_) <= 0 goto LOOP_
+   98  $000000FE:00000049
+   99  $000000FE:00000049  $FFFFFFFF                         NEG_:   DA  -1
+  100  $000000FE:0000004A  $0000004D                         INI_:   DD  INITXT_
+  101  $000000FE:0000004B  $0000005D                         FIM_:   DD  FIMTXT_
+  102  $000000FE:0000004C  $00000034                         LOOP1_: dd  RETPRT_
+  103  $000000FE:0000004D
+  104  $000000FE:0000004D                                    INITXT_:
+  105  $000000FE:0000004D  $0000000C                            DA  12      // CLS
+  106  $000000FE:0000004E  $0000004F                            DA  79      // O
+  107  $000000FE:0000004F  $00000049                            DA  73      // I
+  108  $000000FE:00000050  $00000053                            DA  83      // S
+  109  $000000FE:00000051  $00000043                            DA  67      // C
+  110  $000000FE:00000052  $00000020                            DA  32      // SPC
+  111  $000000FE:00000053  $00000045                            DA  69      // E
+  112  $000000FE:00000054  $0000006D                            DA  109     // m
+  113  $000000FE:00000055  $00000075                            DA  117     // u
+  114  $000000FE:00000056  $0000006C                            DA  108     // l
+  115  $000000FE:00000057  $00000061                            DA  97      // a
+  116  $000000FE:00000058  $00000074                            DA  116     // t
+  117  $000000FE:00000059  $0000006F                            DA  111     // o
+  118  $000000FE:0000005A  $00000072                            DA  114     // r
+  119  $000000FE:0000005B  $0000000A                            DA  10      // LF
+  120  $000000FE:0000005C  $00000000                            DA  0
+  121  $000000FE:0000005D                                    FIMTXT_:
+  122  $000000FE:0000005D                                    END_:
+  123  $000000FE:0000005D
+  124  $000000FE:0000005D                                    // DATA SEGMENT
+  125  $000000FE:0000005D  $00000000  $00000000  $00000000   PARS_: DA  0  0  0
+  126  $000000FE:00000060  $00000000  $00000000  $00000000          DA  0  0  0
+  127  $000000FE:00000063  $00000000  $00000000                     da  0  0
+  128  $000000FE:00000065
+  129  $000000FE:00000065  $00000000                         CHR_: DD  0
+  130  $000000FE:00000066  $00000000                         tmp_: dd  0
+  131  $000000FE:00000067  $00000000                         BUF_: DD  0
+  132  $000000FE:00000068  $00000000                         PNT_: DD  0
+  133  $00000000:00000167
+  134  $00000000:00000167                                    //*******************************************
+  135  $00000000:00000167                                    // Kernel
+  136  $00000000:00000167                                    //*******************************************
+  137  $00000000:00000167
+  138  $00000000:0FFFF000  $FFFF000                                  ORG $FFFF000                     // 16776960
+  139  $00000000:0FFFF000
+  140  $00000000:0FFFF000  $FFFFFFD5  $FFFFFFD5  $0FFFF003   COLD:   subleq   rgSigHALT               // Limpa sinal de HALT (16777215)
+  141  $00000000:0FFFF003
+  142  $00000000:0FFFF003                                            // Ajusta Ponteiro de rotina da HALT
+  143  $00000000:0FFFF003  $0000000C  $0000000C  $0FFFF006           subleq   TEMP                    // Limpa TEMP
+  144  $00000000:0FFFF006  $FFFFFFD6  $FFFFFFD6  $0FFFF009           subleq   rgAddHalt               // Limpa Ponteiro de rotina de HALT
+  145  $00000000:0FFFF009  $0FFFF08A  $0000000C  $0FFFF00C           subleq   HLTADD  TEMP            // TEMP = -HLTADD
+  146  $00000000:0FFFF00C  $0000000C  $FFFFFFD6  $0FFFF00F           subleq   TEMP    rgAddHalt       // Ponteiro de rotina de Halt = -TEMP = HLTADD
+  147  $00000000:0FFFF00F
+  148  $00000000:0FFFF00F  $FFFFFFD8  $FFFFFFD8  $0FFFF012           subleq   rgHard_IRQ              // Limpa Hard IRQ
+  149  $00000000:0FFFF012  $0FFFF08B  $FFFFFFD8  $0FFFF015           subleq   MONE  rgHard_IRQ        // Habilita Hard IRQ
+  150  $00000000:0FFFF015
+  151  $00000000:0FFFF015  $FFFFFFD9  $FFFFFFD9  $0FFFF018           subleq   rgSoft_IRQ              // Limpa Soft IRQ
+  152  $00000000:0FFFF018  $0FFFF08B  $FFFFFFD9  $0FFFF01B           subleq   MONE  rgSoft_IRQ        // Habilita Soft IRQ
+  153  $00000000:0FFFF01B
+  154  $00000000:0FFFF01B  $FFFFFFD7  $FFFFFFD7  $0FFFF01E           subleq   rgIRQ_En                // Limpa flag Interrupcoes
+  155  $00000000:0FFFF01E  $0FFFF08B  $FFFFFFD7  $0FFFF021           subleq   MONE  rgIRQ_En          // Habilita interrupcoes (Hard e Soft)
+  156  $00000000:0FFFF021
+  157  $00000000:0FFFF021                                            // EXECUTA O PROGRAMA ATUAL
+  158  $00000000:0FFFF021                                            // Salva o espaco de codigo
+  159  $00000000:0FFFF021  $0000000C  $0000000C  $0FFFF024           subleq   TEMP                    // Limpa TEMP
+  160  $00000000:0FFFF024  $FFFFFFDC  $FFFFFFDC  $0FFFF027           subleq   rgCS_Start              // Limpa CS Start
+  161  $00000000:0FFFF027  $00000005  $00000005  $0FFFF02A           subleq   ProcAdd                 // Endereco de execucao
+  162  $00000000:0FFFF02A  $000000FE  $0000000C  $0FFFF02D           subleq   CSINI_  TEMP            // TEMP = -CSINI_
+  163  $00000000:0FFFF02D  $0000000C  $FFFFFFDC  $0FFFF030           subleq   TEMP    rgCS_Start      // CS Start = -TEMP = CSINI_
+  164  $00000000:0FFFF030  $0000000C  $00000005  $0FFFF033           subleq   TEMP    ProcAdd         // Ajusta end processo a executar
+  165  $00000000:0FFFF033
+  166  $00000000:0FFFF033  $0000000C  $0000000C  $0FFFF036           subleq   TEMP                    // Limpa TEMP
+  167  $00000000:0FFFF036  $FFFFFFDD  $FFFFFFDD  $0FFFF039           subleq   rgCS_End                // Limpa CS End
+  168  $00000000:0FFFF039  $000000FF  $0000000C  $0FFFF03C           subleq   CSEND_  TEMP            // TEMP = -CSEND_
+  169  $00000000:0FFFF03C  $0000000C  $FFFFFFDD  $0FFFF03F           subleq   TEMP    rgCS_End        // CS End = -TEMP = CSEND_
+  170  $00000000:0FFFF03F
+  171  $00000000:0FFFF03F                                            // Salva o espaco de dados
+  172  $00000000:0FFFF03F  $0000000C  $0000000C  $0FFFF042           subleq   TEMP                    // Limpa TEMP
+  173  $00000000:0FFFF042  $FFFFFFDE  $FFFFFFDE  $0FFFF045           subleq   rgDS_Start              // Limpa DS Start
+  174  $00000000:0FFFF045  $00000100  $0000000C  $0FFFF048           subleq   DSINI_  TEMP            // TEMP = -DSINI_
+  175  $00000000:0FFFF048  $0000000C  $FFFFFFDE  $0FFFF04B           subleq   TEMP    rgDS_Start      // DS Star = -TEMP = DSINI_
+  176  $00000000:0FFFF04B
+  177  $00000000:0FFFF04B                                            // Executa o programa
+  178  $00000000:0FFFF04B  $0000000C  $0000000C  $0FFFF04E           subleq   TEMP                    // Limpa TEMP
+  179  $00000000:0FFFF04E  $FFFFFFDF  $FFFFFFDF  $0FFFF051           subleq   rgDS_End                // Limpa DS End
+  180  $00000000:0FFFF051  $00000101  $0000000C  $0FFFF054           subleq   DSEND_  TEMP            // TEMP = -DSEND_
+  181  $00000000:0FFFF054  $0000000C  $FFFFFFDF  $0FFFF057           subleq   TEMP  rgDS_End          // Ds End = -TEMP = DSEND_
+  182  $00000000:0FFFF057
+  183  $00000000:0FFFF057  $0FFFF08D  $FFFFFFDB  $00000003           subleq   ONE  rgProtected  EXCPRC // Liga o modo protegido e desvia para o inicio do programa
+  184  $00000000:0FFFF05A
+  185  $00000000:0FFFF05A  $0FFFF08B  $FFFFFFD5  $0FFFF05D   HALT:   subleq   MONE  rgSigHALT         // Seta sinal de HALT (16777215)
+  186  $00000000:0FFFF05D  $0000000C  $0000000C  $0FFFF05D   HLT1:   subleq   TEMP  TEMP  HLT1        // Loop eterno ate RESET
+  187  $00000000:0FFFF060
+  188  $00000000:0FFFF060  $0000000C  $0000000C  $0FFFF063   KBDSTS: subleq   TEMP                    // Limpa TEMP
+  189  $00000000:0FFFF063  $FFFFFFE0  $0000000C  $0FFFF066           subleq   Port_0  TEMP            // TEMP = -(Status do teclado)
+  190  $00000000:0FFFF066  $FFFFFFDE  $FFFFFFDE  $0FFFF069           subleq   rgDS_Start              // Limpa a primeira posicao da regiao de dados do program atual
+  191  $00000000:0FFFF069  $0000000C  $FFFFFFDE  $0FFFF06C           subleq   TEMP  rgDS_Start        // rgDS_Start = -(-TEMP)         //
+  192  $00000000:0FFFF06C  $0000000C  $0000000C  $00000028           subleq   TEMP  TEMP  rgRet_Soft_IRQ_0  // Volta a rotina que o chamou
+  193  $00000000:0FFFF06F
+  194  $00000000:0FFFF06F  $0000000C  $0000000C  $0FFFF072   INKEY:  subleq   TEMP                    // Limpa TEMP
+  195  $00000000:0FFFF072  $FFFFFFE1  $0000000C  $0FFFF075           subleq   Port_1  TEMP            // TEMP = -(Tecla)
+  196  $00000000:0FFFF075  $FFFFFFDE  $FFFFFFDE  $0FFFF078           subleq   rgDS_Start              // Limpa a primeira posicao da regiao de dados do program atual
+  197  $00000000:0FFFF078  $0000000C  $FFFFFFDE  $0FFFF07B           subleq   TEMP  rgDS_Start        // rgDS_Start = Tecla         //
+  198  $00000000:0FFFF07B  $0000000C  $0000000C  $00000028           subleq   TEMP  TEMP  rgRet_Soft_IRQ_0  // Volta a rotina que o chamou
+  199  $00000000:0FFFF07E
+  200  $00000000:0FFFF07E  $0000000C  $0000000C  $0FFFF081   OUTCHR: subleq   TEMP                    // Limpa TEMP
+  201  $00000000:0FFFF081  $FFFFFFDE  $0000000C  $0FFFF084           subleq  rgDS_Start  TEMP         // Recupera o caracter a ser impresso (-char em TEMP)
+  202  $00000000:0FFFF084  $0000000C  $FFFFFFE1  $0FFFF087           subleq  TEMP  Port_1             // Envia o caracter a ser impresso a porta
+  203  $00000000:0FFFF087  $0000000C  $0000000C  $00000028           subleq  TEMP  TEMP  rgRet_Soft_IRQ_0  // Volta a rotina que o chamou
+  204  $00000000:0FFFF08A
+  205  $00000000:0FFFF08A  $0FFFF05A                         HLTADD: DA       HALT
+  206  $00000000:0FFFF08B
+  207  $00000000:0FFFF08B  $FFFFFFFF                         MONE:   DA   -1
+  208  $00000000:0FFFF08C  $00000000                         ZERO:   DA   0
+  209  $00000000:0FFFF08D  $00000001                         ONE:    DA   1
+  210  $00000000:0FFFF08E
+  211  $00000000:0FFFF08E
+  212  $00000000:0FFFF08E                                          // Definicoes dos registros internos da CPU (a b)
+  213  $00000000:FFFFFFCC  $FFFFFFCC                               DC   rgError_Line $FFFFFFCC   // Linha onde ocorreu o erro
+  214  $00000000:FFFFFFCD  $FFFFFFCD                               DC   rgError_Code $FFFFFFCD   // Código do erro
+  215  $00000000:FFFFFFCE  $FFFFFFCE                               DC   rgError_Hndr $FFFFFFCE   // Endereço da rotina de manipulação de erro
+  216  $00000000:0FFFF08E
+  217  $00000000:FFFFFFCF  $FFFFFFCF                               DC   rgPar0_IRQ   $FFFFFFCF   // --+
+  218  $00000000:FFFFFFD0  $FFFFFFD0                               DC   rgPar1_IRQ   $FFFFFFD0   //   +----> Parametros (caso necessarios) para a IRQ
+  219  $00000000:FFFFFFD1  $FFFFFFD1                               DC   rgPar2_IRQ   $FFFFFFD1   // --+
+  220  $00000000:0FFFF08E
+  221  $00000000:FFFFFFD2  $FFFFFFD2                               DC   rgNum_IRQ    $FFFFFFD2   // Numero da IRQ a ser chamada (subleq a Add_IRQ).
+  222  $00000000:0FFFF08E                                                                        // Apos a escrita nessa posicao as interrupções ficam
+  223  $00000000:0FFFF08E                                                                        // bloqueadas até a chamada para o endereco abaixo
+  224  $00000000:FFFFFFD3  $FFFFFFD3                               DC   Exec_IRQ     $FFFFFFD3   // Executa IRQ. Gancho para chamada de IRQ (subleq TMP TMP Exec_IRQ)
+  225  $00000000:FFFFFFD4  $FFFFFFD4                               DC   Ret_IRQ      $FFFFFFD4   // Quando uma IRQ é chamada, o retorno é feito por aqui (subleq TMP TMP Ret_IRQ)
+  226  $00000000:0FFFF08E
+  227  $00000000:FFFFFFD5  $FFFFFFD5                               DC   rgSigHALT    $FFFFFFD5   // Endereco rotina de HALT (a b)
+  228  $00000000:FFFFFFD6  $FFFFFFD6                               DC   rgAddHALT    $FFFFFFD6   // Sinal HALT (a b)
+  229  $00000000:0FFFF08E
+  230  $00000000:FFFFFFD7  $FFFFFFD7                               DC   rgIRQ_En     $FFFFFFD7   // Habilita interrupcoes (menos NMI) (a b)
+  231  $00000000:FFFFFFD8  $FFFFFFD8                               DC   rgHard_IRQ   $FFFFFFD8   // Habilita interrupcoes por hardware
+  232  $00000000:FFFFFFD9  $FFFFFFD9                               DC   rgSoft_IRQ   $FFFFFFD9   // Habilita interrupcoes por software
+  233  $00000000:0FFFF08E
+  234  $00000000:FFFFFFDA  $FFFFFFDA                               DC   rgMemTop     $FFFFFFDA   // Ponteiro de topo de memoria (RAM+ROM)
+  235  $00000000:0FFFF08E
+  236  $00000000:FFFFFFDB  $FFFFFFDB                               DC   rgProtected  $FFFFFFDB   // Flag de Modo Protegido
+  237  $00000000:0FFFF08E
+  238  $00000000:0FFFF08E                                          // Se modo protegido habilitado, esses enderecos tambem indicam os limites da programa em execucao
+  239  $00000000:0FFFF08E                                          // ESTAS AREAS NAO PODEM ENCAVALAR
+  240  $00000000:FFFFFFDC  $FFFFFFDC                               DC   rgCS_Start   $FFFFFFDC   // Ponteiro Inicio da area de codigo -+
+  241  $00000000:FFFFFFDD  $FFFFFFDD                               DC   rgCS_End     $FFFFFFDD   // Ponteiro Fim da area de codigo ----+---> leitura e execucao (a b)
+  242  $00000000:0FFFF08E
+  243  $00000000:FFFFFFDE  $FFFFFFDE                               DC   rgDS_Start   $FFFFFFDE   // Ponteiro Inicio da area de dados --+
+  244  $00000000:FFFFFFDF  $FFFFFFDF                               DC   rgDS_End     $FFFFFFDF   // Ponteiro Fim da area de dados -----+----> leitura e escrita (a b)
+  245  $00000000:0FFFF08E
+  246  $00000000:0FFFF08E                                          // I/O (a b)
+  247  $00000000:FFFFFFE0  $FFFFFFE0                               DC   Port_0       $FFFFFFE0   // Status teclado (subleq Port_0 b)
+  248  $00000000:FFFFFFE1  $FFFFFFE1                               DC   Port_1       $FFFFFFE1   // Inkey          (subleq Port_1 b)
+  249  $00000000:FFFFFFE2  $FFFFFFE2                               DC   Port_2       $FFFFFFE2   // OUTCHR        (subleq a Port_2)
+  250  $00000000:FFFFFFE3  $FFFFFFE3                               DC   Port_3       $FFFFFFE3   // (a b)
+  251  $00000000:FFFFFFE4  $FFFFFFE4                               DC   Port_4       $FFFFFFE4   // (a b)
+  252  $00000000:FFFFFFE5  $FFFFFFE5                               DC   Port_5       $FFFFFFE5   // (a b)
+  253  $00000000:FFFFFFE6  $FFFFFFE6                               DC   Port_6       $FFFFFFE6   // (a b)
+  254  $00000000:FFFFFFE7  $FFFFFFE7                               DC   Port_7       $FFFFFFE7   // (a b)
+  255  $00000000:FFFFFFE8  $FFFFFFE8                               DC   Port_8       $FFFFFFE8   // (a b)
+  256  $00000000:FFFFFFE9  $FFFFFFE9                               DC   Port_9       $FFFFFFE9   // (a b)
+  257  $00000000:FFFFFFEA  $FFFFFFEA                               DC   Port_10      $FFFFFFEA   // (a b)
+  258  $00000000:FFFFFFEB  $FFFFFFEB                               DC   Port_11      $FFFFFFEB   // (a b)
+  259  $00000000:FFFFFFEC  $FFFFFFEC                               DC   Port_12      $FFFFFFEC   // (a b)
+  260  $00000000:FFFFFFED  $FFFFFFED                               DC   Port_13      $FFFFFFED   // (a b)
+  261  $00000000:FFFFFFEE  $FFFFFFEE                               DC   Port_14      $FFFFFFEE   // (a b)
+  262  $00000000:FFFFFFEF  $FFFFFFEF                               DC   Port_15      $FFFFFFEF   // (a b)
+  263  $00000000:FFFFFFF0  $FFFFFFF0                               DC   Port_16      $FFFFFFF0   // (a b)
+  264  $00000000:FFFFFFF1  $FFFFFFF1                               DC   Port_17      $FFFFFFF1   // (a b)
+  265  $00000000:FFFFFFF2  $FFFFFFF2                               DC   Port_18      $FFFFFFF2   // (a b)
+  266  $00000000:FFFFFFF3  $FFFFFFF3                               DC   Port_19      $FFFFFFF3   // (a b)
+  267  $00000000:FFFFFFF4  $FFFFFFF4                               DC   Port_20      $FFFFFFF4   // (a b)
+  268  $00000000:FFFFFFF5  $FFFFFFF5                               DC   Port_21      $FFFFFFF5   // (a b)
+  269  $00000000:FFFFFFF6  $FFFFFFF6                               DC   Port_22      $FFFFFFF6   // (a b)
+  270  $00000000:FFFFFFF7  $FFFFFFF7                               DC   Port_23      $FFFFFFF7   // (a b)
+  271  $00000000:FFFFFFF8  $FFFFFFF8                               DC   Port_24      $FFFFFFF8   // (a b)
+  272  $00000000:FFFFFFF9  $FFFFFFF9                               DC   Port_25      $FFFFFFF9   // (a b)
+  273  $00000000:FFFFFFFA  $FFFFFFFA                               DC   Port_26      $FFFFFFFA   // (a b)
+  274  $00000000:FFFFFFFB  $FFFFFFFB                               DC   Port_27      $FFFFFFFB   // (a b)
+  275  $00000000:FFFFFFFC  $FFFFFFFC                               DC   Port_28      $FFFFFFFC   // (a b)
+  276  $00000000:FFFFFFFD  $FFFFFFFD                               DC   Port_29      $FFFFFFFD   // (a b)
+  277  $00000000:FFFFFFFE  $FFFFFFFE                               DC   Port_30      $FFFFFFFE   // (a b)
+  278  $00000000:FFFFFFFF  $FFFFFFFF                               DC   Port_31      $FFFFFFFF   // (a b)

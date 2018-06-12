@@ -1,0 +1,386 @@
+     1                                                      | //-------------------------------------------------------\\
+     2                                                      | //                                                       \\
+     3                                                      | //-------------------------------------------------------\\
+     4                                                      | //                                                       \\
+     5                                                      | 
+     6                                                      |       DC   MemBottom $00000000
+     7                                                      |       DC   MemTop    $0FFFFFFF
+     8                                                      |       //DC   Process           5  // EXCPRC + 2
+     9                                                      | 
+    10  $00000000:00000000                                  |       ORG 0
+    11  $00000000:00000000  $0000000C  $0000000C  $0FFFF000 |       subleq  TEMP  TEMP  COLD           // Cold Boot
+    12                                                      | 
+    13  $00000000:00000003  $0FFFF11E  $FFFFFFDB            | EXCPRC:  DD  ONE  rgProtected
+    14  $00000000:00000005  $00000000                       | Process: DD  0                           // Gancho para chamar um novo processo
+    15                                                      | 
+    16                                                      | // Imprimir um caracter. A posição com zero será substituida pelo endereço do caracter
+    17  $00000000:00000006  $00000000  $FFFFFFE2  $00000009 | PRNCHR:  subleq  0  Port_2
+    18  $00000000:00000009  $0000000C  $0000000C            |          DD  TEMP  TEMP
+    19  $00000000:0000000B  $00000000                       | PRNCHRF: DD  0                           // Aqui vai a chamada de retorno (subleq  TEMP  TEMP <ret>)
+    20                                                      | 
+    21  $00000000:0000000C  $00000000                       | TEMP:    DA  0                           // Espaco reservado para dados temporarios
+    22                                                      | 
+    23                                                      | 
+    24  $00000000:00000010                                  |       ORG 16
+    25                                                      | 
+    26  $00000000:00000010  $00000000                       | rgAdd_Hard_IRQ_0:   DA  0   // Endereço de manipulação da Hard IRQ 0
+    27  $00000000:00000011  $00000000                       | rgAdd_Hard_IRQ_1:   DA  0   // Endereço de manipulação da Hard IRQ 1
+    28  $00000000:00000012  $00000000                       | rgAdd_Hard_IRQ_2:   DA  0   // Endereço de manipulação da Hard IRQ 2
+    29  $00000000:00000013  $00000000                       | rgAdd_Hard_IRQ_3:   DA  0   // Endereço de manipulação da Hard IRQ 3
+    30  $00000000:00000014  $00000000                       | rgAdd_Hard_IRQ_4:   DA  0   // Endereço de manipulação da Hard IRQ 4
+    31  $00000000:00000015  $00000000                       | rgAdd_Hard_IRQ_5:   DA  0   // Endereço de manipulação da Hard IRQ 5
+    32  $00000000:00000016  $00000000                       | rgAdd_Hard_IRQ_6:   DA  0   // Endereço de manipulação da Hard IRQ 6
+    33  $00000000:00000017  $00000000                       | rgAdd_Hard_IRQ_7:   DA  0   // Endereço de manipulação da Hard IRQ 7
+    34                                                      | 
+    35  $00000000:00000018  $00000000                       | rgRet_Hard_IRQ_0:   DA  0   // Retorno da Hard IRQ 0
+    36  $00000000:00000019  $00000000                       | rgRet_Hard_IRQ_1:   DA  0   // Retorno da Hard IRQ 1
+    37  $00000000:0000001A  $00000000                       | rgRet_Hard_IRQ_2:   DA  0   // Retorno da Hard IRQ 2
+    38  $00000000:0000001B  $00000000                       | rgRet_Hard_IRQ_3:   DA  0   // Retorno da Hard IRQ 3
+    39  $00000000:0000001C  $00000000                       | rgRet_Hard_IRQ_4:   DA  0   // Retorno da Hard IRQ 4
+    40  $00000000:0000001D  $00000000                       | rgRet_Hard_IRQ_5:   DA  0   // Retorno da Hard IRQ 5
+    41  $00000000:0000001E  $00000000                       | rgRet_Hard_IRQ_6:   DA  0   // Retorno da Hard IRQ 6
+    42  $00000000:0000001F  $00000000                       | rgRet_Hard_IRQ_7:   DA  0   // Retorno da Hard IRQ 7
+    43                                                      | 
+    44  $00000000:00000020  $00000000                       | rgAdd_Soft_IRQ_0:   DA  0   // Endereço de manipulação da Soft IRQ 0
+    45  $00000000:00000021  $00000000                       | rgAdd_Soft_IRQ_1:   DA  0   // Endereço de manipulação da Soft IRQ 1
+    46  $00000000:00000022  $00000000                       | rgAdd_Soft_IRQ_2:   DA  0   // Endereço de manipulação da Soft IRQ 2
+    47  $00000000:00000023  $00000000                       | rgAdd_Soft_IRQ_3:   DA  0   // Endereço de manipulação da Soft IRQ 3
+    48  $00000000:00000024  $00000000                       | rgAdd_Soft_IRQ_4:   DA  0   // Endereço de manipulação da Soft IRQ 4
+    49  $00000000:00000025  $00000000                       | rgAdd_Soft_IRQ_5:   DA  0   // Endereço de manipulação da Soft IRQ 5
+    50  $00000000:00000026  $00000000                       | rgAdd_Soft_IRQ_6:   DA  0   // Endereço de manipulação da Soft IRQ 6
+    51  $00000000:00000027  $00000000                       | rgAdd_Soft_IRQ_7:   DA  0   // Endereço de manipulação da Soft IRQ 7
+    52                                                      | 
+    53  $00000000:00000028  $00000000                       | rgRet_Soft_IRQ_0:   DA  0   // Retorno da Soft IRQ 0
+    54  $00000000:00000029  $00000000                       | rgRet_Soft_IRQ_1:   DA  0   // Retorno da Soft IRQ 1
+    55  $00000000:0000002A  $00000000                       | rgRet_Soft_IRQ_2:   DA  0   // Retorno da Soft IRQ 2
+    56  $00000000:0000002B  $00000000                       | rgRet_Soft_IRQ_3:   DA  0   // Retorno da Soft IRQ 3
+    57  $00000000:0000002C  $00000000                       | rgRet_Soft_IRQ_4:   DA  0   // Retorno da Soft IRQ 4
+    58  $00000000:0000002D  $00000000                       | rgRet_Soft_IRQ_5:   DA  0   // Retorno da Soft IRQ 5
+    59  $00000000:0000002E  $00000000                       | rgRet_Soft_IRQ_6:   DA  0   // Retorno da Soft IRQ 6
+    60  $00000000:0000002F  $00000000                       | rgRet_Soft_IRQ_7:   DA  0   // Retorno da Soft IRQ 7
+    61                                                      | 
+    62                                                      | 
+    63                                                      |       // area de inicio de programa
+    64  $00000000:000000FE                                  |       ORG 254
+    65                                                      | 
+    66  $00000000:000000FE  $00000102                       | CSINI_:   DA  PROGR_
+    67  $00000000:000000FF  $00000197                       | CSEND_:   DA  LOOP1_
+    68  $00000000:00000100  $00000192                       | DSINI_:   DA  NEG_
+    69  $00000000:00000101  $000001B2                       | DSEND_:   DA  END_
+    70                                                      | 
+    71  $00000102:00000000  $000001B2                       |       REL END_
+    72                                                      | 
+    73                                                      | // CODE SEGMENT
+    74  $00000102:00000000  $00000099  $00000099  $00000003 | PROGR_:  subleq  BUF_                    // Limpa BUF_
+    75  $00000102:00000003  $FFFFFFDC  $00000099  $00000006 |          subleq  rgCS_Start  BUF_        // BUF_ = -[INI_] = -rgCS_Start
+    76  $00000102:00000006  $00000099  $00000093  $00000009 |          subleq  BUF_  INI_              // INI_ = INI_ - [BUF_] = INI_ + rgCS_Start
+    77  $00000102:00000009  $00000099  $00000094  $0000000C |          subleq  BUF_  FIM_              // FIM_ = FIM_ - [BUF_] = FIM_ + rgCS_Start
+    78  $00000102:0000000C  $00000099  $00000095  $0000000F |          subleq  BUF_  LOOP1_            // LOOP1_ = LOOP1_ - [BUF_] = LOOP1_ + rgCS_Start
+    79  $00000102:0000000F  $00000099  $00000096  $00000012 |          subleq  BUF_  CHR__             // CHR__ = CHR__ - [BUF_] = CHR__ + rgCS_Start
+    80                                                      | 
+    81  $00000102:00000012  $0000009A  $0000009A  $00000015 |          subleq  PNT_                    // Limpa PNT_
+    82  $00000102:00000015  $00000099  $00000099  $00000018 |          subleq  BUF_                    // Limpa BUF_
+    83  $00000102:00000018  $00000093  $00000099  $0000001B |          subleq  INI_  BUF_              // BUF_ = -[INI_] = -INITXT_
+    84  $00000102:0000001B  $00000099  $0000009A  $0000001E |          subleq  BUF_  PNT_              // PNT_ = -[BUF_] = INITXT_
+    85                                                      | 
+    86  $00000102:0000001E  $00000098  $00000098  $00000021 | LOOP_:   subleq  TMP_                    // Limpa TMP_
+    87  $00000102:00000021  $00000097  $00000097  $00000024 |          subleq  CHR_                    // Limpa CHR_
+    88  $00000102:00000024  $00000099  $00000099  $00000027 |          subleq  BUF_                    // Limpa BUF_
+    89  $00000102:00000027  $0000009A  $00000099  $0000002A |          subleq  PNT_  BUF_              // BUF_ = -PNT_
+    90                                                      | 
+    91  $00000102:0000002A  $FFFFFFD2  $FFFFFFD2  $0000002D |          subleq  rgNum_IRQ               // Limpa rgNum_IRQ
+    92  $00000102:0000002D  $00000091  $FFFFFFD2  $00000030 |          subleq  MTWO_ rgNum_IRQ         // rgNum_IRQ = 2 (OutChar)
+    93                                                      | 
+    94  $00000102:00000030  $FFFFFFCF  $FFFFFFCF  $00000033 |          subleq  rgPar0_IRQ              // Limpa rgPar0_IRQ
+    95  $00000102:00000033  $00000099  $FFFFFFCF  $00000036 |          subleq  BUF_  rgPar0_IRQ        // rgPar0_IRQ = -BUF_ = PNT_
+    96                                                      | 
+    97  $00000102:00000036  $00000098  $00000098  $FFFFFFD3 |          subleq  TMP_  TMP_  Exec_IRQ    // Chama Interrupção
+    98                                                      | 
+    99  $00000102:00000039  $00000090  $0000009A  $0000003C | RETPRT_: subleq  NEG_  PNT_              // Incrementa PNT_
+   100  $00000102:0000003C  $00000098  $00000098  $0000003F |          subleq  TMP_                    // Limpa TMP_
+   101  $00000102:0000003F  $00000099  $00000099  $00000042 |          subleq  BUF_                    // Limpa BUF_
+   102  $00000102:00000042  $00000094  $00000098  $00000045 |          subleq  FIM_  TMP_              // TMP_ = -FIM_
+   103  $00000102:00000045  $00000098  $00000099  $00000048 |          subleq  TMP_  BUF_              // BUF_ = -TMP_ = FIM_
+   104                                                      |          //subleq  PNT_  BUF_  Exec_Halt   // if {BUF_ = BUF_ - PNT_) <= 0 HALT
+   105  $00000102:00000048  $0000009A  $00000099  $0000004E |          subleq  PNT_  BUF_  RDKEY_      // if {BUF_ = BUF_ - PNT_) <= 0 HALT
+   106  $00000102:0000004B  $00000097  $00000097  $0000001E |          subleq  CHR_  CHR_  LOOP_       // Goto LOOP_
+   107  $00000102:0000004E                                  | RDKEY_:
+   108  $00000102:0000004E  $FFFFFFD2  $FFFFFFD2  $FFFFFFD3 |          subleq  rgNum_IRQ  rgNum_IRQ  Exec_IRQ     // Limpa rgNum_IRQ (IsKey) e chama Interrupção
+   109  $00000102:00000051  $00000099  $00000099  $00000054 |          subleq  BUF_                    // if (BUF_ = BUF_ - BUF_) <= 0 goto NEXT --> BUF_ = 0
+   110  $00000102:00000054  $00000098  $00000098  $00000057 |          subleq  TMP_                    // Limpa TMP_
+   111  $00000102:00000057  $FFFFFFCF  $00000098  $0000005A |          subleq  rgPar0_IRQ  TMP_        // TMP_ = TMP_ - rgPar0_IRQ
+   112  $00000102:0000005A  $00000098  $00000099  $0000004E |          subleq  TMP_  BUF_  RDKEY_      // if (BUF_ = BUF_ - TMP_)  <= 0 goto RDKEY_ --> BUF_ = STATUS TECLADO
+   113                                                      | 
+   114  $00000102:0000005D  $FFFFFFD2  $FFFFFFD2  $00000060 |          subleq  rgNum_IRQ               // Limpa rgNum_IRQ
+   115  $00000102:00000060  $00000090  $FFFFFFD2  $00000063 |          subleq  NEG_ rgNum_IRQ          // rgNum_IRQ = 1 (InKey)
+   116  $00000102:00000063  $00000098  $00000098  $FFFFFFD3 |          subleq  TMP_  TMP_  Exec_IRQ    // Chama Interrupção
+   117  $00000102:00000066                                  | PRNKEY_:
+   118  $00000102:00000066  $00000098  $00000098  $00000069 |          subleq  TMP_                    // Limpa TMP_
+   119  $00000102:00000069  $00000097  $00000097  $0000006C |          subleq  CHR_                    // Limpa CHR_
+   120  $00000102:0000006C  $FFFFFFCF  $00000098  $0000006F |          subleq  rgPar0_IRQ  TMP_        // TMP_ = TMP_ - rgPar0_IRQ = -CHAR
+   121  $00000102:0000006F  $00000098  $00000097  $00000072 |          subleq  TMP_  CHR_              // CHR_ = -TMP_ = CHAR
+   122  $00000102:00000072  $00000098  $00000098  $00000075 |          subleq  TMP_                    // Limpa TMP_
+   123  $00000102:00000075  $00000099  $00000099  $00000078 |          subleq  BUF_                    // Limpa BUF_
+   124  $00000102:00000078  $00000096  $00000098  $0000007B |          subleq  CHR__  TMP_             // TMP_ = -CHR__
+   125  $00000102:0000007B  $FFFFFFCF  $FFFFFFCF  $0000007E |          subleq  rgPar0_IRQ              // Limpa rgPar0_IRQ
+   126  $00000102:0000007E  $00000098  $FFFFFFCF  $00000081 |          subleq  TMP_  rgPar0_IRQ        // Limpa -TMP_ = CHR__
+   127                                                      | 
+   128  $00000102:00000081  $FFFFFFD2  $FFFFFFD2  $00000084 |          subleq  rgNum_IRQ               // Limpa rgNum_IRQ
+   129  $00000102:00000084  $00000091  $FFFFFFD2  $00000087 |          subleq  MTWO_ rgNum_IRQ         // rgNum_IRQ = 2 (OutChar)
+   130  $00000102:00000087  $00000098  $00000098  $FFFFFFD3 |          subleq  TMP_  TMP_  Exec_IRQ    // Chama Interrupção
+   131                                                      | 
+   132  $00000102:0000008A  $00000098  $00000098  $0000004E |          subleq  TMP_  TMP_  RDKEY_      // if (BUF_ = BUF_ - TMP_)  <= 0 goto RDKEY_ --> BUF_ = STATUS TECLADO
+   133                                                      | 
+   134  $00000102:0000008D  $0000009A  $00000099  $FFFFFFCB |          subleq  PNT_  BUF_  Exec_Halt   // if {BUF_ = BUF_ - PNT_) <= 0 HALT
+   135                                                      | 
+   136                                                      | // DATA SEGMENT
+   137  $00000102:00000090  $FFFFFFFF                       | NEG_:   DA  -1
+   138  $00000102:00000091  $FFFFFFFE                       | MTWO_:  DA  -2
+   139  $00000102:00000092  $FFFFFFE5                       | ESC_:   DA  -27 // ESC_
+   140                                                      | 
+   141  $00000102:00000093  $0000009B                       | INI_:   DD  INITXT_
+   142  $00000102:00000094  $000000AF                       | FIM_:   DD  FIMTXT_
+   143  $00000102:00000095  $00000039                       | LOOP1_: dd  RETPRT_
+   144  $00000102:00000096  $00000097                       | CHR__:  DD  CHR_
+   145                                                      | 
+   146  $00000102:00000097  $00000000                       | CHR_:   DD  0
+   147  $00000102:00000098  $00000000                       | tmp_:   dd  0
+   148  $00000102:00000099  $00000000                       | BUF_:   DD  0
+   149  $00000102:0000009A  $00000000                       | PNT_:   DD  0
+   150                                                      | 
+   151                                                      | 
+   152  $00000102:0000009B                                  | INITXT_:
+   153  $00000102:0000009B  $0000000C                       |         DA  12     // CLS
+   154  $00000102:0000009C  $0000004F                       |         DA  79     // O
+   155  $00000102:0000009D  $00000049                       |         DA  73     // I
+   156  $00000102:0000009E  $00000053                       |         DA  83     // S
+   157  $00000102:0000009F  $00000043                       |         DA  67     // C
+   158  $00000102:000000A0  $00000020                       |         DA  32     // SPC
+   159  $00000102:000000A1  $00000045                       |         DA  69     // E
+   160  $00000102:000000A2  $0000006D                       |         DA  109     // m
+   161  $00000102:000000A3  $00000075                       |         DA  117     // u
+   162  $00000102:000000A4  $0000006C                       |         DA  108     // l
+   163  $00000102:000000A5  $00000061                       |         DA  97     // a
+   164  $00000102:000000A6  $00000074                       |         DA  116     // t
+   165  $00000102:000000A7  $0000006F                       |         DA  111     // o
+   166  $00000102:000000A8  $00000072                       |         DA  114     // r
+   167  $00000102:000000A9  $0000000D                       |         DA  13     // CR
+   168  $00000102:000000AA  $0000000A                       |         DA  10     // LF
+   169  $00000102:000000AB  $0000000D                       |         DA  13     // CR
+   170  $00000102:000000AC  $0000000A                       |         DA  10     // LF
+   171  $00000102:000000AD  $0000003E                       |         DA  62     // >
+   172  $00000102:000000AE  $00000020                       |         DA  32     // SPC
+   173  $00000102:000000AF                                  | FIMTXT_:
+   174  $00000102:000000AF  $00000000                       |         DA  0
+   175  $00000102:000000B0                                  | END_:
+   176                                                      | 
+   177                                                      | //*******************************************
+   178                                                      | // Kernel
+   179                                                      | //*******************************************
+   180                                                      | 
+   181  $00000000:0FFFF000                                  |         ORG $FFFF000                     // 16776960
+   182                                                      | 
+   183  $00000000:0FFFF000  $FFFFFFD5  $FFFFFFD5  $0FFFF003 | COLD:   subleq  rgSigHALT               // Limpa sinal de HALT (16777215)
+   184                                                      | 
+   185                                                      |         // Ajusta Ponteiro de rotina da HALT
+   186  $00000000:0FFFF003  $0000000C  $0000000C  $0FFFF006 |         subleq  TEMP                    // Limpa TEMP
+   187  $00000000:0FFFF006  $FFFFFFD6  $FFFFFFD6  $0FFFF009 |         subleq  rgAddHalt               // Limpa Ponteiro de rotina de HALT
+   188  $00000000:0FFFF009  $0FFFF117  $0000000C  $0FFFF00C |         subleq  HALT_ADD  TEMP          // TEMP = -HALT_ADD
+   189  $00000000:0FFFF00C  $0000000C  $FFFFFFD6  $0FFFF00F |         subleq  TEMP    rgAddHalt       // Ponteiro de rotina de Halt = -TEMP = HALT_ADD
+   190                                                      | 
+   191  $00000000:0FFFF00F  $00000010  $00000010  $0FFFF012 |         subleq  rgAdd_Hard_IRQ_0      // Limpa endereço de manipulação da Hard IRQ 0
+   192  $00000000:0FFFF012  $00000011  $00000011  $0FFFF015 |         subleq  rgAdd_Hard_IRQ_1      // Limpa endereço de manipulação da Hard IRQ 1
+   193  $00000000:0FFFF015  $00000012  $00000012  $0FFFF018 |         subleq  rgAdd_Hard_IRQ_2      // Limpa endereço de manipulação da Hard IRQ 2
+   194  $00000000:0FFFF018  $00000013  $00000013  $0FFFF01B |         subleq  rgAdd_Hard_IRQ_3      // Limpa endereço de manipulação da Hard IRQ 3
+   195  $00000000:0FFFF01B  $00000014  $00000014  $0FFFF01E |         subleq  rgAdd_Hard_IRQ_4      // Limpa endereço de manipulação da Hard IRQ 4
+   196  $00000000:0FFFF01E  $00000015  $00000015  $0FFFF021 |         subleq  rgAdd_Hard_IRQ_5      // Limpa endereço de manipulação da Hard IRQ 5
+   197  $00000000:0FFFF021  $00000016  $00000016  $0FFFF024 |         subleq  rgAdd_Hard_IRQ_6      // Limpa endereço de manipulação da Hard IRQ 6
+   198  $00000000:0FFFF024  $00000017  $00000017  $0FFFF027 |         subleq  rgAdd_Hard_IRQ_7      // Limpa endereço de manipulação da Hard IRQ 7
+   199  $00000000:0FFFF027  $00000018  $00000018  $0FFFF02A |         subleq  rgRet_Hard_IRQ_0      // Retorno da Hard IRQ 0
+   200  $00000000:0FFFF02A  $00000019  $00000019  $0FFFF02D |         subleq  rgRet_Hard_IRQ_1      // Retorno da Hard IRQ 1
+   201  $00000000:0FFFF02D  $0000001A  $0000001A  $0FFFF030 |         subleq  rgRet_Hard_IRQ_2      // Retorno da Hard IRQ 2
+   202  $00000000:0FFFF030  $0000001B  $0000001B  $0FFFF033 |         subleq  rgRet_Hard_IRQ_3      // Retorno da Hard IRQ 3
+   203  $00000000:0FFFF033  $0000001C  $0000001C  $0FFFF036 |         subleq  rgRet_Hard_IRQ_4      // Retorno da Hard IRQ 4
+   204  $00000000:0FFFF036  $0000001D  $0000001D  $0FFFF039 |         subleq  rgRet_Hard_IRQ_5      // Retorno da Hard IRQ 5
+   205  $00000000:0FFFF039  $0000001E  $0000001E  $0FFFF03C |         subleq  rgRet_Hard_IRQ_6      // Retorno da Hard IRQ 6
+   206  $00000000:0FFFF03C  $0000001F  $0000001F  $0FFFF03F |         subleq  rgRet_Hard_IRQ_7      // Retorno da Hard IRQ 7
+   207                                                      | 
+   208  $00000000:0FFFF03F  $00000023  $00000023  $0FFFF042 |         subleq  rgAdd_Soft_IRQ_3      // Limpa endereço de manipulação da Soft IRQ 3
+   209  $00000000:0FFFF042  $00000024  $00000024  $0FFFF045 |         subleq  rgAdd_Soft_IRQ_4      // Limpa endereço de manipulação da Soft IRQ 4
+   210  $00000000:0FFFF045  $00000025  $00000025  $0FFFF048 |         subleq  rgAdd_Soft_IRQ_5      // Limpa endereço de manipulação da Soft IRQ 5
+   211  $00000000:0FFFF048  $00000026  $00000026  $0FFFF04B |         subleq  rgAdd_Soft_IRQ_6      // Limpa endereço de manipulação da Soft IRQ 6
+   212  $00000000:0FFFF04B  $00000027  $00000027  $0FFFF04E |         subleq  rgAdd_Soft_IRQ_7      // Limpa endereço de manipulação da Soft IRQ 7
+   213  $00000000:0FFFF04E  $00000028  $00000028  $0FFFF051 |         subleq  rgRet_Soft_IRQ_0      // Retorno da Soft IRQ 0
+   214  $00000000:0FFFF051  $00000029  $00000029  $0FFFF054 |         subleq  rgRet_Soft_IRQ_1      // Retorno da Soft IRQ 1
+   215  $00000000:0FFFF054  $0000002A  $0000002A  $0FFFF057 |         subleq  rgRet_Soft_IRQ_2      // Retorno da Soft IRQ 2
+   216  $00000000:0FFFF057  $0000002B  $0000002B  $0FFFF05A |         subleq  rgRet_Soft_IRQ_3      // Retorno da Soft IRQ 3
+   217  $00000000:0FFFF05A  $0000002C  $0000002C  $0FFFF05D |         subleq  rgRet_Soft_IRQ_4      // Retorno da Soft IRQ 4
+   218  $00000000:0FFFF05D  $0000002D  $0000002D  $0FFFF060 |         subleq  rgRet_Soft_IRQ_5      // Retorno da Soft IRQ 5
+   219  $00000000:0FFFF060  $0000002E  $0000002E  $0FFFF063 |         subleq  rgRet_Soft_IRQ_6      // Retorno da Soft IRQ 6
+   220  $00000000:0FFFF063  $0000002F  $0000002F  $0FFFF066 |         subleq  rgRet_Soft_IRQ_7      // Retorno da Soft IRQ 7
+   221                                                      | 
+   222  $00000000:0FFFF066  $FFFFFFD8  $FFFFFFD8  $0FFFF069 |         subleq  rgHard_IRQ              // Limpa Hard IRQ
+   223  $00000000:0FFFF069  $0FFFF11E  $FFFFFFD8  $0FFFF06C |         subleq  ONE   rgHard_IRQ        // Habilita Hard IRQ
+   224                                                      | 
+   225  $00000000:0FFFF06C  $FFFFFFD9  $FFFFFFD9  $0FFFF06F |         subleq  rgSoft_IRQ              // Limpa Soft IRQ
+   226  $00000000:0FFFF06F  $0FFFF11E  $FFFFFFD9  $0FFFF072 |         subleq  ONE   rgSoft_IRQ        // Habilita Soft IRQ
+   227                                                      | 
+   228  $00000000:0FFFF072  $FFFFFFD7  $FFFFFFD7  $0FFFF075 |         subleq  rgIRQ_En                // Limpa flag Interrupções
+   229  $00000000:0FFFF075  $0FFFF11E  $FFFFFFD7  $0FFFF078 |         subleq  ONE   rgIRQ_En          // Habilita Interrupções (Hard e Soft)
+   230                                                      | 
+   231                                                      |         // Configura Soft IRQ 0 (IsKey)
+   232  $00000000:0FFFF078  $0000000C  $0000000C  $0FFFF07B |         subleq  TEMP                    // Limpa TEMP
+   233  $00000000:0FFFF07B  $00000020  $00000020  $0FFFF07E |         subleq  rgAdd_Soft_IRQ_0        // Limpa rgAdd_Soft_IRQ_0
+   234  $00000000:0FFFF07E  $0FFFF118  $0000000C  $0FFFF081 |         subleq  ISKEY_ADD  TEMP         // TEMP = -ISKEY
+   235  $00000000:0FFFF081  $0000000C  $00000020  $0FFFF084 |         subleq  TEMP  rgAdd_Soft_IRQ_0  // rgAdd_Soft_IRQ_0 = ISKEY
+   236                                                      | 
+   237                                                      |         // Configura Soft IRQ 1 (InKey)
+   238  $00000000:0FFFF084  $0000000C  $0000000C  $0FFFF087 |         subleq  TEMP                    // Limpa TEMP
+   239  $00000000:0FFFF087  $00000021  $00000021  $0FFFF08A |         subleq  rgAdd_Soft_IRQ_1        // Limpa rgAdd_Soft_IRQ_1
+   240  $00000000:0FFFF08A  $0FFFF119  $0000000C  $0FFFF08D |         subleq  INKEY_ADD  TEMP         // TEMP = -INKEY
+   241  $00000000:0FFFF08D  $0000000C  $00000021  $0FFFF090 |         subleq  TEMP  rgAdd_Soft_IRQ_1  // rgAdd_Soft_IRQ_1 = INKEY
+   242                                                      | 
+   243                                                      |         // Configura Soft IRQ 2 (OutChar)
+   244  $00000000:0FFFF090  $0000000C  $0000000C  $0FFFF093 |         subleq  TEMP                    // Limpa TEMP
+   245  $00000000:0FFFF093  $00000022  $00000022  $0FFFF096 |         subleq  rgAdd_Soft_IRQ_2        // Limpa rgAdd_Soft_IRQ_2
+   246  $00000000:0FFFF096  $0FFFF11A  $0000000C  $0FFFF099 |         subleq  OUTCHR_ADD  TEMP        // TEMP = -OUTCHR
+   247  $00000000:0FFFF099  $0000000C  $00000022  $0FFFF09C |         subleq  TEMP  rgAdd_Soft_IRQ_2  // rgAdd_Soft_IRQ_2 = OUTCHR
+   248                                                      | 
+   249                                                      |         // EXECUTA O PROGRAMA ATUAL
+   250                                                      |         // Salva o espaco de codigo
+   251  $00000000:0FFFF09C  $0000000C  $0000000C  $0FFFF09F |         subleq  TEMP                    // Limpa TEMP
+   252  $00000000:0FFFF09F  $FFFFFFDC  $FFFFFFDC  $0FFFF0A2 |         subleq  rgCS_Start              // Limpa CS Start
+   253  $00000000:0FFFF0A2  $00000005  $00000005  $0FFFF0A5 |         subleq  Process                 // Endereço de execucao
+   254  $00000000:0FFFF0A5  $000000FE  $0000000C  $0FFFF0A8 |         subleq  CSINI_  TEMP            // TEMP = -CSINI_
+   255  $00000000:0FFFF0A8  $0000000C  $FFFFFFDC  $0FFFF0AB |         subleq  TEMP    rgCS_Start      // CS Start = -TEMP = CSINI_
+   256  $00000000:0FFFF0AB  $0000000C  $00000005  $0FFFF0AE |         subleq  TEMP    Process         // Ajusta end processo a executar
+   257                                                      | 
+   258  $00000000:0FFFF0AE  $0000000C  $0000000C  $0FFFF0B1 |         subleq  TEMP                    // Limpa TEMP
+   259  $00000000:0FFFF0B1  $FFFFFFDD  $FFFFFFDD  $0FFFF0B4 |         subleq  rgCS_End                // Limpa CS End
+   260  $00000000:0FFFF0B4  $000000FF  $0000000C  $0FFFF0B7 |         subleq  CSEND_  TEMP            // TEMP = -CSEND_
+   261  $00000000:0FFFF0B7  $0000000C  $FFFFFFDD  $0FFFF0BA |         subleq  TEMP    rgCS_End        // CS End = -TEMP = CSEND_
+   262                                                      | 
+   263                                                      |         // Salva o espaco de dados
+   264  $00000000:0FFFF0BA  $0000000C  $0000000C  $0FFFF0BD |         subleq  TEMP                    // Limpa TEMP
+   265  $00000000:0FFFF0BD  $FFFFFFDE  $FFFFFFDE  $0FFFF0C0 |         subleq  rgDS_Start              // Limpa DS Start
+   266  $00000000:0FFFF0C0  $00000100  $0000000C  $0FFFF0C3 |         subleq  DSINI_  TEMP            // TEMP = -DSINI_
+   267  $00000000:0FFFF0C3  $0000000C  $FFFFFFDE  $0FFFF0C6 |         subleq  TEMP    rgDS_Start      // DS Star = -TEMP = DSINI_
+   268                                                      | 
+   269  $00000000:0FFFF0C6  $0000000C  $0000000C  $0FFFF0C9 |         subleq  TEMP                    // Limpa TEMP
+   270  $00000000:0FFFF0C9  $FFFFFFDF  $FFFFFFDF  $0FFFF0CC |         subleq  rgDS_End                // Limpa DS End
+   271  $00000000:0FFFF0CC  $00000101  $0000000C  $0FFFF0CF |         subleq  DSEND_  TEMP            // TEMP = -DSEND_
+   272  $00000000:0FFFF0CF  $0000000C  $FFFFFFDF  $0FFFF0D2 |         subleq  TEMP  rgDS_End          // Ds End = -TEMP = DSEND_
+   273                                                      | 
+   274                                                      |         // Executa o programa
+   275  $00000000:0FFFF0D2  $0000000C  $0000000C  $00000003 |         subleq  TEMP TEMP  EXCPRC       // Chama o processo
+   276                                                      | 
+   277  $00000000:0FFFF0D5  $0FFFF11E  $FFFFFFD5  $0FFFF0D8 | HALT:   subleq  ONE   rgSigHALT         // Seta sinal de HALT (16777215)
+   278  $00000000:0FFFF0D8  $0000000C  $0000000C  $0FFFF0D8 | HLT1:   subleq  TEMP  TEMP  HLT1        // Loop eterno ate RESET
+   279                                                      | 
+   280  $00000000:0FFFF0DB  $0000000C  $0000000C  $0FFFF0DE | ISKEY:  subleq  TEMP                    // Limpa TEMP
+   281  $00000000:0FFFF0DE  $FFFFFFCF  $FFFFFFCF  $0FFFF0E1 |         subleq  rgPar0_IRQ              // Limpa a primeira posição da região de dados do program atual
+   282  $00000000:0FFFF0E1  $FFFFFFE0  $0000000C  $0FFFF0E4 |         subleq  Port_0  TEMP            // TEMP = -(Status do teclado)
+   283  $00000000:0FFFF0E4  $0000000C  $FFFFFFCF  $0FFFF0E7 |         subleq  TEMP  rgPar0_IRQ        // rgDS_Start = -(-TEMP)
+   284  $00000000:0FFFF0E7  $0000000C  $0000000C  $FFFFFFD4 |         subleq  TEMP  TEMP  Ret_IRQ     // Volta à rotina que chamou a Interrupção
+   285                                                      | 
+   286  $00000000:0FFFF0EA  $0000000C  $0000000C  $0FFFF0ED | INKEY:  subleq  TEMP                    // Limpa TEMP
+   287  $00000000:0FFFF0ED  $FFFFFFCF  $FFFFFFCF  $0FFFF0F0 |         subleq  rgPar0_IRQ              // Limpa a primeira posição da região de dados do program atual
+   288  $00000000:0FFFF0F0  $FFFFFFE1  $0000000C  $0FFFF0F3 |         subleq  Port_1  TEMP            // TEMP = -(Tecla)
+   289  $00000000:0FFFF0F3  $0000000C  $FFFFFFCF  $0FFFF0F6 |         subleq  TEMP  rgPar0_IRQ        // rgDS_Start = Tecla
+   290  $00000000:0FFFF0F6  $0000000C  $0000000C  $FFFFFFD4 |         subleq  TEMP  TEMP  Ret_IRQ     // Volta à rotina que chamou a Interrupção
+   291                                                      | 
+   292  $00000000:0FFFF0F9  $0000000C  $0000000C  $0FFFF0FC | OUTCHR: subleq  TEMP                     // Limpa TEMP
+   293  $00000000:0FFFF0FC  $00000006  $00000006  $0FFFF0FF |         subleq  PRNCHR                   // Limpa PRNCHR
+   294  $00000000:0FFFF0FF  $FFFFFFCF  $0000000C  $0FFFF102 |         subleq  rgPar0_IRQ  TEMP         // Recupera o endereço caracter a ser impresso (-TEMP)
+   295  $00000000:0FFFF102  $0000000C  $00000006  $0FFFF105 |         subleq  TEMP  PRNCHR             // PRNCHR = -TEMP = rgPar0_IRQ. Coloca em PRNCHR o endereço do caracter
+   296                                                      | 
+   297  $00000000:0FFFF105  $0000000C  $0000000C  $0FFFF108 |         subleq  TEMP                     // Limpa TEMP
+   298  $00000000:0FFFF108  $0000000B  $0000000B  $0FFFF10B |         subleq  PRNCHRF                  // Limpa PRNCHRF
+   299  $00000000:0FFFF10B  $0FFFF11B  $0000000C  $0FFFF10E |         subleq  OUTCHR1_ADD  TEMP        // TEMP = -OUTCHR1_ADD
+   300  $00000000:0FFFF10E  $0000000C  $0000000B  $0FFFF111 |         subleq  TEMP  PRNCHRF            // PRNCHRF = -TEMP = OUTCHR1_ADD // Coloca em PRNCHRF o endereço de retorno
+   301                                                      | 
+   302  $00000000:0FFFF111  $0000000C  $0000000C  $00000006 |         subleq  TEMP  TEMP  PRNCHR       // Vai para PRNCHR
+   303                                                      | 
+   304  $00000000:0FFFF114                                  | OUTCHR1:
+   305  $00000000:0FFFF114  $0000000C  $0000000C  $FFFFFFD4 |         subleq  TEMP  TEMP  Ret_IRQ      // Volta à rotina que chamou a Interrupção
+   306                                                      | 
+   307  $00000000:0FFFF117  $0FFFF0D5                       | HALT_ADD:    DA  HALT
+   308  $00000000:0FFFF118  $0FFFF0DB                       | ISKEY_ADD:   DA  ISKEY
+   309  $00000000:0FFFF119  $0FFFF0EA                       | INKEY_ADD:   DA  INKEY
+   310  $00000000:0FFFF11A  $0FFFF0F9                       | OUTCHR_ADD:  DA  OUTCHR
+   311  $00000000:0FFFF11B  $0FFFF114                       | OUTCHR1_ADD: da  OUTCHR1
+   312                                                      | 
+   313  $00000000:0FFFF11C  $FFFFFFFF                       | MONE:   DA  -1
+   314  $00000000:0FFFF11D  $00000000                       | ZERO:   DA  0
+   315  $00000000:0FFFF11E  $00000001                       | ONE:    DA  1
+   316                                                      | 
+   317                                                      |         //
+   318                                                      |         // Definições dos registros internos da CPU (a b)
+   319                                                      |         //
+   320                                                      |         DC   Exec_Halt    $FFFFFFCB   // Chamadas a este endereço acionam o HALT
+   321                                                      |         DC   rgError_Line $FFFFFFCC   // Linha onde ocorreu o erro
+   322                                                      |         DC   rgError_Code $FFFFFFCD   // Código do erro
+   323                                                      |         DC   rgError_Hndr $FFFFFFCE   // Endereço da rotina de manipulação de erro
+   324                                                      | 
+   325                                                      |         DC   rgPar0_IRQ   $FFFFFFCF   // --+
+   326                                                      |         DC   rgPar1_IRQ   $FFFFFFD0   //   +----> Parâmetros (caso necessários) para a IRQ
+   327                                                      |         DC   rgPar2_IRQ   $FFFFFFD1   // --+
+   328                                                      | 
+   329                                                      |         DC   rgNum_IRQ    $FFFFFFD2   // Número da IRQ a ser chamada (subleq a Add_IRQ).
+   330                                                      |                                       // Após a escrita nessa posição as interrupções ficam
+   331                                                      |                                       // bloqueadas até a chamada para o endereço abaixo
+   332                                                      |         DC   Exec_IRQ     $FFFFFFD3   // Executa IRQ. Gancho para chamada de IRQ (subleq TMP TMP Exec_IRQ)
+   333                                                      |         DC   Ret_IRQ      $FFFFFFD4   // Quando uma IRQ é chamada, o retorno é feito por aqui (subleq TMP TMP Ret_IRQ)
+   334                                                      | 
+   335                                                      |         DC   rgSigHALT    $FFFFFFD5   // Endereço rotina de HALT (a b)
+   336                                                      |         DC   rgAddHALT    $FFFFFFD6   // Sinal HALT (a b)
+   337                                                      | 
+   338                                                      |         DC   rgIRQ_En     $FFFFFFD7   // Habilita Interrupções (menos NMI) (a b)
+   339                                                      |         DC   rgHard_IRQ   $FFFFFFD8   // Habilita Interrupções por hardware
+   340                                                      |         DC   rgSoft_IRQ   $FFFFFFD9   // Habilita Interrupções por software
+   341                                                      | 
+   342                                                      |         DC   rgMemTop     $FFFFFFDA  // Ponteiro de topo de memória (RAM+ROM)
+   343                                                      | 
+   344                                                      |         DC   rgProtected  $FFFFFFDB   // Flag de Modo Protegido
+   345                                                      | 
+   346                                                      |         // Se modo protegido habilitado, estes endereços também indicam os limites da programa em execução
+   347                                                      |         // ESTAS AREAS NAO PODEM ENCAVALAR
+   348                                                      |         DC   rgCS_Start   $FFFFFFDC   // Ponteiro Início da área de código -+
+   349                                                      |         DC   rgCS_End     $FFFFFFDD   // Ponteiro Fim da área de código ----+---> leitura e execução (a b)
+   350                                                      | 
+   351                                                      |         DC   rgDS_Start   $FFFFFFDE   // Ponteiro Início da área de dados --+
+   352                                                      |         DC   rgDS_End     $FFFFFFDF   // Ponteiro Fim da área de dados -----+----> leitura e escrita (a b)
+   353                                                      | 
+   354                                                      |         // I/O (a b)
+   355                                                      |         DC   Port_0       $FFFFFFE0   // Status teclado (subleq Port_0 b)
+   356                                                      |         DC   Port_1       $FFFFFFE1   // Inkey          (subleq Port_1 b)
+   357                                                      |         DC   Port_2       $FFFFFFE2   // OUTCHR        (subleq a Port_2)
+   358                                                      |         DC   Port_3       $FFFFFFE3   // (a b)
+   359                                                      |         DC   Port_4       $FFFFFFE4   // (a b)
+   360                                                      |         DC   Port_5       $FFFFFFE5   // (a b)
+   361                                                      |         DC   Port_6       $FFFFFFE6   // (a b)
+   362                                                      |         DC   Port_7       $FFFFFFE7   // (a b)
+   363                                                      |         DC   Port_8       $FFFFFFE8   // (a b)
+   364                                                      |         DC   Port_9       $FFFFFFE9   // (a b)
+   365                                                      |         DC   Port_10      $FFFFFFEA   // (a b)
+   366                                                      |         DC   Port_11      $FFFFFFEB   // (a b)
+   367                                                      |         DC   Port_12      $FFFFFFEC   // (a b)
+   368                                                      |         DC   Port_13      $FFFFFFED   // (a b)
+   369                                                      |         DC   Port_14      $FFFFFFEE   // (a b)
+   370                                                      |         DC   Port_15      $FFFFFFEF   // (a b)
+   371                                                      |         DC   Port_16      $FFFFFFF0   // (a b)
+   372                                                      |         DC   Port_17      $FFFFFFF1   // (a b)
+   373                                                      |         DC   Port_18      $FFFFFFF2   // (a b)
+   374                                                      |         DC   Port_19      $FFFFFFF3   // (a b)
+   375                                                      |         DC   Port_20      $FFFFFFF4   // (a b)
+   376                                                      |         DC   Port_21      $FFFFFFF5   // (a b)
+   377                                                      |         DC   Port_22      $FFFFFFF6   // (a b)
+   378                                                      |         DC   Port_23      $FFFFFFF7   // (a b)
+   379                                                      |         DC   Port_24      $FFFFFFF8   // (a b)
+   380                                                      |         DC   Port_25      $FFFFFFF9   // (a b)
+   381                                                      |         DC   Port_26      $FFFFFFFA   // (a b)
+   382                                                      |         DC   Port_27      $FFFFFFFB   // (a b)
+   383                                                      |         DC   Port_28      $FFFFFFFC   // (a b)
+   384                                                      |         DC   Port_29      $FFFFFFFD   // (a b)
+   385                                                      |         DC   Port_30      $FFFFFFFE   // (a b)
+   386                                                      |         DC   Port_31      $FFFFFFFF   // (a b)
